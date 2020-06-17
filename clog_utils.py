@@ -3,6 +3,7 @@ import numpy as np
 from IPython.display import HTML
 from base64 import b64encode
 from scipy.ndimage import binary_fill_holes
+import matplotlib.pyplot as plt
 
 def display_clip(path):  
     print(path)
@@ -17,6 +18,7 @@ def display_clip(path):
 
 
 def read_clip(path):
+    path = path.decode("utf-8") if type(path) == bytes else path
     frames = []
     cap = cv2.VideoCapture(path)
     if (cap.isOpened()== False):
@@ -40,4 +42,13 @@ def extract_mask(img, threshold=20):
 
 
 def extract_masks(imgs):
-    return [extract_mask(img) for img in imgs]
+    masks = [extract_mask(img) for img in imgs]
+    return np.stack(masks, axis=0)
+
+
+def display_fused(frame, mask):
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)[...,None]
+    mask = mask * 255
+    img = np.concatenate([gray, gray, mask], axis=-1)
+    plt.imshow(img)
+    plt.show()
