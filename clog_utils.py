@@ -17,7 +17,7 @@ def display_clip(path):
     return html
 
 
-def read_clip(path):
+def read_clip(path, height=-1, width=-1):
     path = path.decode("utf-8") if type(path) == bytes else path
     frames = []
     cap = cv2.VideoCapture(path)
@@ -26,12 +26,14 @@ def read_clip(path):
     while (cap.isOpened()):
         ret, frame = cap.read()
         if ret == True:
+            if width > 0 and height > 0:
+                frame = cv2.resize(frame, (width, height), interpolation = cv2.INTER_AREA)            
             frames.append(frame) 
         else:
             break
     cap.release()
-    return np.stack(frames, axis=0)
-
+    frames = np.stack(frames, axis=0)    
+    return frames
 
 def extract_mask(img, threshold=20):
     img = img-np.mean(img, axis=-1)[...,None]
