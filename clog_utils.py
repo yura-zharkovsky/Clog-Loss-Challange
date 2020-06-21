@@ -27,7 +27,7 @@ def read_clip(path, height=-1, width=-1):
         ret, frame = cap.read()
         if ret == True:
             if width > 0 and height > 0:
-                frame = cv2.resize(frame, (width, height), interpolation = cv2.INTER_AREA)            
+                frame = cv2.resize(frame, (width, height), interpolation = cv2.INTER_AREA) 
             frames.append(frame) 
         else:
             break
